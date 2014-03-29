@@ -1,30 +1,27 @@
-require 'ripper'
-require 'pp'
 
-
-Token = Struct.new(:type, :value)
-  
+Token = Struct.new(:token, :word)
 class Scanner
 
   
   def initialize (input)
     tokens = []
     current_token_number = 0
-    tokenize(input).each do |token|
-
-      # self.tokens << token
+    tokenize(input).each do |token_array|
+      token_array.each do |token|
+        puts token.match(tok_regex).inspect if token
+      end
     end
   end
 
   def tokenize(input)
-    puts tok_regex.match(".chuj{};")
-    # puts ".test{};".scan (create_tok_regex)
-    []
+    string_to_tokenize = input.clone
+    string_to_tokenize.scan(tok_regex)
   end
 
   def tok_regex
 
-    token_specification = [["COMMA" , /\,/],
+    token_specification = [
+    ["COMMA" , /\,/],
     ["COLON" ,  /\:/],
     ["SCOLON" , /\;/],
     ["OCB" , /\{/],
@@ -43,7 +40,8 @@ class Scanner
     tok_regex
   end
 end
-skaner = Scanner.new('')
+
+skaner = Scanner.new('.dupa{};')
 # p Ripper.lex("def m(a) nil end")
 
 ### UWAGI
