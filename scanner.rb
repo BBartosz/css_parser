@@ -1,26 +1,36 @@
 
-Token = Struct.new(:token, :def)
+Token = Struct.new(:token, :name)
 class Scanner
 
   
   def initialize (input)
-    tokens = []
     current_token_number = 0
-    tokenize(input)
+    puts tokenize(input).inspect
+    # lista = []
+    # lista << Token.new('mojtoken', 'definicja')
+    # puts lista
   end
 
   def tokenize(input)
+    tokens_defined = []
     string_to_tokenize = input.clone
     array_of_token_arrays = string_to_tokenize.scan(tok_regex)
     array_of_token_arrays.each do |token_array|
       token_array.each do |token|
         if token
-          #tu poiwnienem zwrócić liste tokenół najlepiej wraz z
-          puts token.inspect
+          token_matchdata = token.match(tok_regex)
+          token_names = token.match(tok_regex).names
+
+          token_names.each do |name|            
+            if token_matchdata[name.to_sym] != nil
+              token_struct = Token.new(token_matchdata[name.to_sym].to_s, name) 
+              tokens_defined << token_struct
+            end
+          end
         end
       end
     end
-
+    tokens_defined
   end
 
   def tok_regex
