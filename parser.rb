@@ -97,7 +97,18 @@ def check_for_rest_declaration(tokens_array)
     if tokens_array.length > 1
       array_with_removed_first_token = tokens_array[1..-1]
       check_declaration(array_with_removed_first_token)
+    else
+      raise "BRAK ELEMENTÓW PO SREDNIKU"
     end
+  elsif (token[:token] == "ELEMENT") || (token[:token] == "TEXT")
+    if tokens_array.length > 1
+      array_with_removed_first_token = tokens_array[1..-1]
+      check_for_rest_declaration(array_with_removed_first_token)
+    else
+      raise "DUZO CI BRAKUJE"
+    end
+  else
+    raise "BRAK SREDNIKA"
   end
 end
 
@@ -110,8 +121,8 @@ end
 def comma_selector_ocb
    
 end
-array_of_structs = Scanner.tokens_array('.container #lol{text-align:bartek;}')
-# puts check_for_undefined
+array_of_structs = Scanner.tokens_array('.container #lol{text-align:bartek monika dziala nie dziala;} container #lol{text-align:bartek monika dziala nie dziala;}')
+puts check_for_undefined(array_of_structs)
 puts start(array_of_structs)
 # puts array_of_structs.inspect
 
