@@ -57,7 +57,6 @@ class Scanner
     ["TEXT", /[a-zA-Z_]+[\-]+[a-zA-Z_]*/],
     ["UNIT", /em|in|px|%/],
     ["ELEMENT" , /[a-zA-Z_]+[0-9]?/],
-    
     ["NUMBER", /-?\d+[.\.]?\d*/],
     ["WHITESPACE", /\s+/],
     ["UNKNOWN", /./]]
