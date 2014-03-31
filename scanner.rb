@@ -45,19 +45,20 @@ class Scanner
   def self.tok_regex
 
     token_specification = [
+    ["URL", /url\(.+\)/],
     ["COMMA" , /\,/],
     ["COLON" ,  /\:/],
     ["SCOLON" , /\;/],
     ["OCB" , /\{/],
     ["CCB" , /\}/],
     ["CLASS" , /\.[a-zA-Z_]+[0-9]?/],
+    ["COLOR", /#[0-9a-fA-F]{6,6}/],
     ["ID" , /\#[a-zA-Z_]+[0-9]?/],
     ["TEXT", /[a-zA-Z_]+[\-]+[a-zA-Z_]*/],
-    ["ELEMENT" , /[a-zA-Z_]+[0-9]?/],
     ["UNIT", /em|in|px|%/],
-    ["URL", /url\(.+\)/],
+    ["ELEMENT" , /[a-zA-Z_]+[0-9]?/],
+    
     ["NUMBER", /-?\d+[.\.]?\d*/],
-    ["COLOR", /#[0-9a-fA-F]{6,6}/],
     ["WHITESPACE", /\s+/],
     ["UNKNOWN", /./]]
 

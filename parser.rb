@@ -52,7 +52,7 @@ class Parser
       if array_with_removed_first_token.length > 0
         check_for_colon(array_with_removed_first_token)
       else
-        raise "BRAK : CHUJOWY CSS"
+        raise "MISSING \":\""
       end
     elsif token[:token] == "CCB"
       array_with_removed_first_token = tokens_after_ocb[1..-1]
@@ -66,8 +66,6 @@ class Parser
       if sliced_array.length > 1
         array_with_removed_first_token = sliced_array[1..-1]
         start(array_with_removed_first_token)
-      else
-        raise 'POPRAWNY CSS'
       end
     end
   end
@@ -86,13 +84,30 @@ class Parser
 
   def check_for_first_declaration(tokens_array)
     token = tokens_array[0]
-    if (token[:token] == "ELEMENT") || (token[:token] == "TEXT")
+    if (token[:token] == "ELEMENT") || (token[:token] == "TEXT") || (token[:token] == "COLOR") || (token[:token] == "URL")
+      if tokens_array.length > 1
+        array_with_removed_first_token = tokens_array[1..-1]
+        check_for_rest_declaration(array_with_removed_first_token)
+      end
+    elsif token[:token] == "NUMBER"
+      if tokens_array.length > 1
+       array_with_removed_first_token = tokens_array[1..-1]
+       check_for_unit(array_with_removed_first_token)
+      end
+    else
+      raise "WRONG DECLARATION BODY BEFORE #{token}"
+    end
+  end
+
+  def check_for_unit(tokens_array)
+    token = tokens_array[0]
+    if (token[:token] == "UNIT")
       if tokens_array.length > 1
         array_with_removed_first_token = tokens_array[1..-1]
         check_for_rest_declaration(array_with_removed_first_token)
       end
     else
-      raise "WRONG DECLARATION BODY BEFORE #{token}"
+      raise "ERROR MISSING UNIT AFTER NUMBER"
     end
   end
 
@@ -103,7 +118,7 @@ class Parser
         array_with_removed_first_token = tokens_array[1..-1]
         check_declaration(array_with_removed_first_token)
       end
-    elsif (token[:token] == "ELEMENT") || (token[:token] == "TEXT")
+    elsif (token[:token] == "ELEMENT") || (token[:token] == "TEXT") || (token[:token] == "COLOR") || (token[:token] == "URL")
       if tokens_array.length > 1
         array_with_removed_first_token = tokens_array[1..-1]
         check_for_rest_declaration(array_with_removed_first_token)
@@ -113,6 +128,7 @@ class Parser
     end
   end
 end
+
 
 
 
