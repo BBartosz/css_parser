@@ -10,15 +10,6 @@ def check_for_undefined(array_of_structs)
   end
   return "everything is ok"
 end
-# stylesheet -> styled_selector
-# styled_selector -> selectors parameters_block
-# # blok parametrów
-# parameters_block -> OCB parameters CCB
-# parameters -> parameter parameters
-# parameter -> ELEMENT COLON ELEMENT SEMICOLON
-# blok selectorów
-
-
 
 def start(array_of_structs)
   first_token  = array_of_structs[0]
@@ -59,11 +50,7 @@ def check_declaration(tokens_after_ocb)
     end
   elsif token[:token] == "CCB"
     array_with_removed_first_token = tokens_after_ocb[1..-1]
-    if array_with_removed_first_token.length > 0
-      check_for_semicolon(array_with_removed_first_token)
-    else
-      raise "BRAK ; CHUJOWY CSS"
-    end
+    raise "POPRAWNY CSS"
   end
 end
 
@@ -81,8 +68,36 @@ end
 
 def check_for_colon(tokens_array)
   token = tokens_array[0]
-  if (token[:token] == "colon")
-    check_for_rest_declaration
+  if (token[:token] == "COLON")
+    if tokens_array.length > 1
+      array_with_removed_first_token = tokens_array[1..-1]
+      check_for_first_declaration(array_with_removed_first_token)
+    end
+  end
+end
+
+def check_for_first_declaration(tokens_array)
+  token = tokens_array[0]
+  if (token[:token] == "ELEMENT") || (token[:token] == "TEXT")
+    if tokens_array.length > 1
+      array_with_removed_first_token = tokens_array[1..-1]
+      check_for_rest_declaration(array_with_removed_first_token)
+    else
+      raise "DUZO CI BRAKUJE"
+    end
+  else
+    raise "ZLA DEKLARACJA"
+  end
+end
+
+def check_for_rest_declaration(tokens_array)
+  token = tokens_array[0]
+  if token[:token] == "SCOLON"
+    
+    if tokens_array.length > 1
+      array_with_removed_first_token = tokens_array[1..-1]
+      check_declaration(array_with_removed_first_token)
+    end
   end
 end
 
@@ -95,7 +110,7 @@ end
 def comma_selector_ocb
    
 end
-array_of_structs = Scanner.tokens_array('container{};')
+array_of_structs = Scanner.tokens_array('.container #lol{text-align:bartek;}')
 # puts check_for_undefined
 puts start(array_of_structs)
 # puts array_of_structs.inspect
