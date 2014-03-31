@@ -80,9 +80,3 @@ class Scanner
     without_spaces  
   end
 end
-
-# puts Scanner.tokenize(".bartek???").inspect
-# p Ripper.lex("def m(a) nil end")
-
-### UWAGI
-### (?-mix:[a-z]) == /[a-z]/
