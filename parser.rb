@@ -31,17 +31,16 @@ class Parser
     token = tokens_array[0]
 
     if (token[:token] == "ELEMENT") || (token[:token] == "CLASS") || (token[:token] == "ID")
-      array_with_removed_first_token = tokens_array[1..-1]
-      if array_with_removed_first_token.length > 0
+      
+      if tokens_array.length > 1
+        array_with_removed_first_token = tokens_array[1..-1]
         check_for_next_selector(array_with_removed_first_token) 
-      else
-        raise "BRAK { CHUJOWY CSS"
       end
     elsif token[:token] == 'OCB'
       array_with_removed_ocb = tokens_array[1..-1]
       check_declaration(array_with_removed_ocb)
     else
-      raise "BLEDNY CSS"
+      raise "BLEDNY CSS BRAK { lub SELEKTORA"
     end
   end
 
@@ -55,8 +54,12 @@ class Parser
         raise "MISSING \":\""
       end
     elsif token[:token] == "CCB"
-      array_with_removed_first_token = tokens_after_ocb[1..-1]
-      raise "POPRAWNY CSS"
+      if tokens_after_ocb.length > 1
+        array_with_removed_first_token = tokens_after_ocb[1..-1]
+        start(array_with_removed_first_token)
+      else
+        raise "POPRAWNY CSS"
+      end
     end
   end
 
@@ -65,7 +68,7 @@ class Parser
     if token[:token] == 'SCOLON'
       if sliced_array.length > 1
         array_with_removed_first_token = sliced_array[1..-1]
-        start(array_with_removed_first_token)
+        check_declaration(array_with_removed_first_token)
       end
     end
   end
