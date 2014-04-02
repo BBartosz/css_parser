@@ -40,7 +40,7 @@ class Parser
       array_with_removed_ocb = tokens_array[1..-1]
       check_declaration(array_with_removed_ocb)
     else
-      raise "BLEDNY CSS BRAK { lub SELEKTORA"
+      raise "WRONG CSS MISSING { OR SELECTOR"
     end
   end
 
@@ -58,7 +58,7 @@ class Parser
         array_with_removed_first_token = tokens_after_ocb[1..-1]
         start(array_with_removed_first_token)
       else
-        raise "POPRAWNY CSS"
+        raise "PROPER CSS"
       end
     end
   end
