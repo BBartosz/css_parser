@@ -26,5 +26,5 @@ end
 # start(css_string)
 
 
-css_test = '.bartek {'
+css_test = '.bartek {monika:'
 start_test(css_test)
