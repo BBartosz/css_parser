@@ -30,18 +30,18 @@ class Parser2
 
   def selectors(array_of_tokens)
     token        = get_first_token(array_of_tokens)
-    sliced_array = get_sliced_array(array_of_tokens,1)
+    sliced_array = get_sliced_array(array_of_tokens, 1, 0, "Error: Expecting '{'")
     
-    if selector?(token) && sliced_array.length > 0
+    if selector?(token)
       continuation_of_selectors(sliced_array)     
     else
-      raise "Error: Expecting selector or '{'"
+      raise "Error: Expecting selector"
     end
   end
 
   def continuation_of_selectors(array_of_tokens)
     token        = get_first_token(array_of_tokens)
-    sliced_array = get_sliced_array(array_of_tokens, 1)
+    sliced_array = get_sliced_array(array_of_tokens, 1, 0, '')
     if comma?(token)
       selectors(sliced_array)
     else
@@ -52,30 +52,27 @@ class Parser2
 
   def parameters_block(array_of_tokens)
     token        = get_first_token(array_of_tokens)
-    sliced_array = get_sliced_array(array_of_tokens, 1)
+    sliced_array = get_sliced_array(array_of_tokens, 1, 1, "Error: Missing ':'")
 
-    if ocb?(token) && sliced_array.length > 1
+    if ocb?(token)
       parameters(sliced_array)
     else
       raise "Error: Missing '{'" if !ocb?(token)
       raise "Error: Missing parameters after '{'" if sliced_array.empty?
-      raise "Error: Missing ':'" if sliced_array.length == 1
     end
   end
 
   def parameters(array_of_tokens)
     token1        = get_first_token(array_of_tokens)
     token2        = get_second_token(array_of_tokens)
-    sliced_array  = get_sliced_array(array_of_tokens, 2) 
+    sliced_array  = get_sliced_array(array_of_tokens, 2, 0, "Error: Expecting values of the parameter") 
 
-    if text?(token1) && colon?(token2) && !sliced_array.empty?
+    if text?(token1) && colon?(token2)
       values(sliced_array)
     else
       raise "Error: Expecting Text got #{token1}"  if !text?(token1)
       raise "Error: Expecting Colon got #{token2}" if !colon?(token2)
-      raise "Error: Expecting values of the parameter" if sliced_array.empty?
     end
-    
   end
 
   def selector?(token)
@@ -117,8 +114,12 @@ class Parser2
     return second_token
   end
 
-  def get_sliced_array(array_of_tokens, start_point)
-    sliced_array = array_of_tokens[start_point..-1] 
-    return sliced_array
+  def get_sliced_array(array_of_tokens, start_point, minimal_length, error_msg)
+    if array_of_tokens.length > minimal_length
+      sliced_array = array_of_tokens[start_point..-1] 
+      return sliced_array
+    else 
+      raise error_msg
+    end 
   end
 end
