@@ -55,7 +55,7 @@ class Scanner
     ["COLOR", /#[0-9a-fA-F]{6,6}/],
     ["ID" , /\#[a-zA-Z_]+[0-9]?/],
     ["TEXT", /[a-zA-Z_]+[\-]+[a-zA-Z_]*/],
-    ["UNIT", /em|in|px|%/],
+    ["UNIT", /\d+[em|in|px|%]+/],
     ["ELEMENT" , /[a-zA-Z_]+[0-9]?/],
     ["NUMBER", /-?\d+[.\.]?\d*/],
     ["WHITESPACE", /\s+/],

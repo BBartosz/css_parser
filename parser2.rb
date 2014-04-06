@@ -14,7 +14,7 @@ class Parser2
   end
 
   def stylesheet(array_of_tokens)
-    if array_of_tokens.length > 0
+    if !array_of_tokens.empty?
       styled_selector(array_of_tokens) 
     end
   end
@@ -63,16 +63,37 @@ class Parser2
   end
 
   def parameters(array_of_tokens)
-    token1        = get_first_token(array_of_tokens)
-    token2        = get_second_token(array_of_tokens)
-    sliced_array  = get_sliced_array(array_of_tokens, 2, 0, "Error: Expecting values of the parameter") 
+    token1       = get_first_token(array_of_tokens)
+    return stylesheet(get_sliced_array(array_of_tokens, 1, 0, '')) if ccb?(token1)
+    token2       = get_second_token(array_of_tokens)
+    token3       = get_third_token(array_of_tokens) 
+    sliced_array = get_sliced_array(array_of_tokens, 2, 0, "Error: Expecting values of the parameter")
 
-    if text?(token1) && colon?(token2)
+    if text?(token1) && colon?(token2) && value?(token3)
       values(sliced_array)
     else
       raise "Error: Expecting Text got #{token1}"  if !text?(token1)
       raise "Error: Expecting Colon got #{token2}" if !colon?(token2)
+      raise "Error: Expecting Value after Colon"   if !value?(token3)
     end
+  end
+
+  def values(array_of_tokens)
+    token        = get_first_token(array_of_tokens)
+    sliced_array = get_sliced_array(array_of_tokens, 1, 1, "Error: Expecting value")
+
+    if value?(token)
+      values(sliced_array)
+    elsif semicolon?(token)
+      parameters(sliced_array)
+    elsif ccb?(token)
+      stylesheet(sliced_array)
+    end
+  end
+
+  def check_for_ccb(array_of_tokens)
+    token        = get_first_token(array_of_tokens)
+    sliced_array = get_sliced_array(array_of_tokens, 1, 1, "Error: Expecting }")
   end
 
   def selector?(token)
@@ -87,12 +108,24 @@ class Parser2
     token[:token] == 'OCB'
   end
 
+  def ccb?(token)
+    token[:token] == 'CCB'
+  end
+
   def text?(token)
     (token[:token] == 'TEXT') || (token[:token] == 'ELEMENT')
   end
 
   def colon?(token)
     token[:token] == 'COLON'
+  end
+
+  def semicolon?(token)
+    token[:token] == 'SCOLON'
+  end
+
+  def value?(token)
+    (token[:token] == "ELEMENT") || (token[:token] == "TEXT") || (token[:token] == "COLOR") || (token[:token] == "URL") || (token[:token] == "UNIT")
   end
 
   def selector_first?(array_of_tokens)
@@ -112,6 +145,11 @@ class Parser2
   def get_second_token(array_of_tokens)
     second_token = array_of_tokens[1]
     return second_token
+  end
+
+  def get_third_token(array_of_tokens)
+    third_token = array_of_tokens[2]
+    return third_token
   end
 
   def get_sliced_array(array_of_tokens, start_point, minimal_length, error_msg)

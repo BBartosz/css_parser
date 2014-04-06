@@ -10,7 +10,7 @@ require './parser2'
 
 def start_test(css_string)
   array_of_structs = Scanner.tokens_array(css_string)
-  # puts array_of_structs
+  # puts array_of_structs.inspect
   parser           = Parser2.new(array_of_structs)
 end
 # css_string = "body{ margin-left:200px; background:#5d9ab2 url(\"img_tree.png\") no-repeat top left;}
@@ -26,5 +26,5 @@ end
 # start(css_string)
 
 
-css_test = '.bartek {monika:'
+css_test = '.bartek, #visuality {monika: 23px;piotrkow:23px;}.bartek, #visuality {monika: 23px;piotrkow:23px;}'
 start_test(css_test)

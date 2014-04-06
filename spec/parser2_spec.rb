@@ -1,3 +1,4 @@
+require 'spec_helper'
+
 describe Parser2 do
-  it "#stylesheet should "
 end
