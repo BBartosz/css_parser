@@ -138,26 +138,19 @@ class Parser2
 
   def selector_first?(array_of_tokens)
     first_token = get_first_token(array_of_tokens)
-    if selector?(first_token)
-      return true
-    else
-      return false
-    end
+    selector?(first_token)
   end
 
   def get_first_token(array_of_tokens)
-    first_token = array_of_tokens[0]
-    return first_token
+    array_of_tokens[0]
   end
 
   def get_second_token(array_of_tokens)
-    second_token = array_of_tokens[1]
-    return second_token
+    array_of_tokens[1]
   end
 
   def get_third_token(array_of_tokens)
-    third_token = array_of_tokens[2]
-    return third_token
+    array_of_tokens[2] 
   end
 
   def get_sliced_array(array_of_tokens, start_point, minimal_length, error_msg)
