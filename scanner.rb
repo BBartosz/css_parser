@@ -10,12 +10,12 @@ class Scanner
     string_to_tokenize    = input.clone
     array_of_token_arrays = string_to_tokenize.scan(tok_regex)
 
-    tokens_struct                     = create_array_of_structs(array_of_token_arrays)
+    tokens_struct = create_array_of_structs(array_of_token_arrays)
     array_without_whitespaces(tokens_struct)
   end
 
   def self.create_array_of_structs(array_of_token_arrays)
-    array_of_tokens  = array_of_token_arrays.map {|token_array| token_array.find{|token| token}}
+    array_of_tokens = array_of_token_arrays.map {|token_array| token_array.find{|token| token}}
     array_of_tokens.map {|token| create_token_struct(token)}
   end
 

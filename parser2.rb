@@ -62,13 +62,13 @@ class Parser2
         parameters(sliced_array)
       end
     else
-      raise "Error: Missing '{' get #{token1}"  if !ocb?(token1)
+      raise "Error: Missing '{' get #{token1}"    if !ocb?(token1)
       raise "Error: Missing parameters after '{'" if sliced_array.empty?
     end
   end
 
   def parameters(array_of_tokens)
-    token1       = get_first_token(array_of_tokens)
+    token1 = get_first_token(array_of_tokens)
     if ccb?(token1)
       sliced_array = get_sliced_array(array_of_tokens, 1, 0, '')
       return stylesheet(sliced_array)
@@ -95,7 +95,7 @@ class Parser2
     elsif semicolon?(token)
       parameters(sliced_array)
     else
-      raise "Error: Expecting Semicolon after #{token}"
+      raise "Error: Expecting Semicolon got #{token}"
     end
   end
 
