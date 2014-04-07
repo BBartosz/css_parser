@@ -1,73 +1,56 @@
-  Token = Struct.new(:word, :token)
+Token = Struct.new(:word, :token)
+
 class Scanner
 
-
   def self.tokens_array(input)
-    tokens_array = tokenize(input)
-    tokens_array
+    tokenize(input)
   end
 
   def self.tokenize(input)
-    tokens_defined        = []
     string_to_tokenize    = input.clone
     array_of_token_arrays = string_to_tokenize.scan(tok_regex)
 
-    tokens_struct                     = create_array_of_structs(array_of_token_arrays, tokens_defined)
-    tokens_struct_without_whitespaces = remove_whitespaces(tokens_struct)
-    tokens_struct_without_whitespaces
-    
+    tokens_struct                     = create_array_of_structs(array_of_token_arrays)
+    array_without_whitespaces(tokens_struct)
   end
 
-  def self.create_array_of_structs(array_of_token_arrays, tokens_defined)
-    array_of_token_arrays.each do |token_array|
-      token_array.each do |token|
-        if token
-          token_struct = create_token_struct(token)
-          tokens_defined << token_struct 
-        end
-      end
-    end
-    tokens_defined
+  def self.create_array_of_structs(array_of_token_arrays)
+    array_of_tokens  = array_of_token_arrays.map {|token_array| token_array.find{|token| token}}
+    array_of_tokens.map {|token| create_token_struct(token)}
   end
 
   def self.create_token_struct(token)
     token_matchdata = token.match(tok_regex)
-    token_names = token.match(tok_regex).names
+    token_names     = token.match(tok_regex).names
 
-    token_names.each do |name|            
-      if token_matchdata[name.to_sym]
-        token_struct = Token.new(token_matchdata[name.to_sym].to_s, name) 
-        return token_struct
-      end
-    end
+    token_name = token_names.find {|name| token_matchdata[name.to_sym]}
+    Token.new(token_matchdata[token_name.to_sym].to_s, token_name)
   end
 
   def self.tok_regex
-
     token_specification = [
-    ["URL", /url\(.+\)/],
-    ["COMMA" , /\,/],
-    ["COLON" ,  /\:/],
-    ["SCOLON" , /\;/],
-    ["OCB" , /\{/],
-    ["CCB" , /\}/],
-    ["CLASS" , /\.[a-zA-Z_]+[0-9]?/],
-    ["COLOR", /#[0-9a-fA-F]{6,6}/],
-    ["ID" , /\#[a-zA-Z_]+[0-9]?/],
-    ["TEXT", /[a-zA-Z_]+[\-]+[a-zA-Z_]*/],
-    ["UNIT", /\d+[em|in|px|%]+/],
-    ["ELEMENT" , /[a-zA-Z_]+[0-9]?/],
-    ["NUMBER", /-?\d+[.\.]?\d*/],
+    ["URL",        /url\(.+\)/],
+    ["COMMA" ,     /\,/],
+    ["COLON" ,     /\:/],
+    ["SCOLON" ,    /\;/],
+    ["OCB" ,       /\{/],
+    ["CCB" ,       /\}/],
+    ["CLASS" ,     /\.[a-zA-Z_]+[0-9]?/],
+    ["COLOR",      /#[0-9a-fA-F]{6,6}/],
+    ["ID" ,        /\#[a-zA-Z_]+[0-9]?/],
+    ["TEXT",       /[a-zA-Z_]+[\-]+[a-zA-Z_]*/],
+    ["UNIT",       /\d+[em|in|px|%]+/],
+    ["ELEMENT" ,   /[a-zA-Z_]+[0-9]?/],
+    ["NUMBER",     /-?\d+[.\.]?\d*/],
     ["WHITESPACE", /\s+/],
-    ["UNKNOWN", /./]]
+    ["UNKNOWN",    /./]]
 
-    token_group_str = create_token_group_string(token_specification)
-    token_group_regex = %r{#{token_group_str}}
+    token_group_str   = create_token_group_string(token_specification)
+    %r{#{token_group_str}}
   end
 
   def self.create_token_group_string(token_spec)
     token_group_string = ''
-    
     token_spec.each do |pair|
       token_group_string += ('(?<%s>%s)' % pair) 
       token_group_string += '|' if pair != token_spec.last
@@ -75,10 +58,7 @@ class Scanner
     token_group_string
   end
 
-  def self.remove_whitespaces(array_of_structs)
-    without_spaces = array_of_structs.select{|struct| struct[:token] != 'WHITESPACE'}
-    without_spaces  
+  def self.array_without_whitespaces(array_of_structs)
+    array_of_structs.select{|struct| struct[:token] != 'WHITESPACE'}
   end
 end
-
-Scanner.tok_regex
