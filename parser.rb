@@ -9,7 +9,6 @@ class Parser
 
   def check_for_undefined(array_of_structs)
     array_of_structs.each do |struct|
-
       if struct[:token] == "UNKNOWN"
         raise "#{struct} is broken token"
       end
