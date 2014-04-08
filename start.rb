@@ -6,7 +6,7 @@ def start_test(css_string)
   array_of_structs = Scanner.tokens_array(css_string)
   parser           = Parser2.new(array_of_structs)
 end
-css_test = "body{ margin-left:200px}; background:#5d9ab2 url(\"img_tree.png\") no-repeat top left;}
+css_test = "body{ margin-left:200px; background:#5d9ab2 url(\"img_tree.png\") no-repeat top left;}
 .container{text-align:center;}
 #box{
    border:1px solid gray; 
