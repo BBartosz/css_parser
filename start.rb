@@ -19,7 +19,7 @@ css_test = "body{ margin-left:200px; background:#5d9ab2 url(\"img_tree.png\") no
 }
 a {display:block;background-color:#98bf21;width:120px ;text-align:center;padding:4px;}
 "
-input_string = ".bartek, monika"
+input_string = ".bartek, monika, #piotrkow{bartek:warszawa;}"
 # puts Scanner.new(css_test).inspect
 scanner = Scanner.new(input_string)
 
