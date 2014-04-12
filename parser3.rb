@@ -1,8 +1,17 @@
 class Parser3
-  def initialize(array_of_tokens)
-    array_to_parse = array_of_tokens.clone
-    check_for_undefined(array_to_parse)
-    start(array_to_parse)
+  def initialize(scanner)
+    @scanner    = scanner
+    @token      = @scanner.next_token
+  end
+
+  def take_token(token_type)
+    if @token[:token] != token_type
+      raise "Unexpected token: %s" % token_type
+    end
+
+    if token_type != 'CCB'
+      @token = @scanner.next_token
+    end
   end
 
   def check_for_undefined(array_of_tokens)
@@ -10,40 +19,42 @@ class Parser3
   end
   
   def start
-    stylesheet(array_of_tokens)
+    stylesheet
   end
-
-  def stylesheet(array_of_tokens)
-    styled_selector 
+# stylesheet => styled_selector  
+  def stylesheet
+    styled_selector
     stylesheet
   end
 
-  def styled_selectors(array_of_tokens)
-    selectors(array_of_tokens)
-    parameters_block(array_of_tokens)
+  def styled_selector
+    selectors
+    # parameters_block
   end
 
-  def selectors(array_of_tokens)
-    selector(array_of_tokens[0])
-    continuation_of_selectors(array_of_tokens)
+  def selectors
+    selector
+    continuation_of_selectors
   end
 
-  def selector(token)
-    if (token[:token] == 'ELEMENT') || (token[:token] == 'CLASS') || (token[:token] == 'ID')
+  def selector
+    if (@token[:token] == 'ELEMENT') || (@token[:token] == 'CLASS') || (@token[:token] == 'ID')
+      take_token('CLASS')
     else
       raise "Expecting selector"
     end
   end
 
-  def continuation_of_selectors(array_of_tokens)
-    if (token[:token] == 'COMMA')
+  def continuation_of_selectors
+    if (@token[:token] == 'COMMA')
+      take_token('COMMA')
       selector
     else
     end
   end
 
-  def sliced_array
-    
+  def parameters_block
+    return
   end
 end
 

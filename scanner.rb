@@ -1,6 +1,10 @@
 Token = Struct.new(:word, :token)
 
 class Scanner
+  def initialize(input)
+    @current_token_number = 0
+    @tokens = self.class.tokens_array(input)
+  end
 
   def self.tokens_array(input)
     tokenize(input)
@@ -60,5 +64,14 @@ class Scanner
 
   def self.array_without_whitespaces(array_of_structs)
     array_of_structs.select{|struct| struct[:token] != 'WHITESPACE'}
+  end
+
+  def next_token
+    @current_token_number += 1
+    if @current_token_number - 1 < @tokens.length
+      return @tokens[@current_token_number - 1]
+    else
+      raise 'Error: No more tokens'
+    end
   end
 end
