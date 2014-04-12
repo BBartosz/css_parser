@@ -1,17 +1,14 @@
 class Parser3
   def initialize(scanner)
-    @scanner    = scanner
-    @token      = @scanner.next_token
+    @scanner = scanner
+    @token   = @scanner.next_token
   end
 
   def take_token(token_type)
     if @token[:token] != token_type
-      raise "Unexpected token: %s" % token_type
+      raise "Missing token: %s" % token_type
     end
-
-    if token_type != 'CCB'
-      @token = @scanner.next_token
-    end
+    @token = @scanner.next_token
   end
 
   def check_for_undefined(array_of_tokens)
@@ -24,12 +21,18 @@ class Parser3
 # stylesheet => styled_selector  
   def stylesheet
     styled_selector
-    # stylesheet
+    stylesheets
   end
 
   def styled_selector
     selectors
     parameters_block
+  end
+
+  def stylesheets
+    if selector?(@token)
+      stylesheet
+    end
   end
 
   def selectors
@@ -53,18 +56,14 @@ class Parser3
     if (@token[:token] == 'COMMA')
       take_token('COMMA')
       selectors
-    else
-      
     end
   end
 
   def parameters_block
-    if (@token[:token] == 'OCB')
-      take_token('OCB')
-      parameters
-    else
-      raise "Expecting OCB got #{@token}"
-    end
+    take_token('OCB')
+    parameters
+    puts @token
+    take_token('CCB')
   end
 
   def parameters
@@ -75,40 +74,22 @@ class Parser3
   def parameter
     if @token[:token] == 'TEXT' 
       take_token('TEXT')
-      if @token[:token] == 'COLON'
-        take_token('COLON')
-        if value?(@token)
-          values 
-        else
-          raise "Expecting value, got #{@token}"
-        end
-        take_token('SCOLON')
-      else
-        raise "Expecting COLON, got #{@token}"
-      end
-    elsif @token[:token] == 'ELEMENT' 
+    elsif @token[:token] == 'ELEMENT'
       take_token('ELEMENT')
-      if @token[:token] == 'COLON'
-        take_token('COLON')
-        if value?(@token)
-          values 
-        else
-          raise "Expecting value, got #{@token}"
-        end
-        take_token('SCOLON')
-      else
-        raise "Expecting COLON, got #{@token}"
-      end
-    else
-      raise "Expecting TEXT or ELEMENT, got #{@token}"
     end
+
+    take_token('COLON')
+    values 
+    take_token('SCOLON')
   end
 
   def another_parameters
-    if @token[:token] == 'TEXT' || @token[:token] == 'ELEMENT'
+    if @token[:token] == 'TEXT'
+      take_token('TEXT')
       parameter
-    else
-      #do nothing
+    elsif @token[:token] == 'ELEMENT'
+      take_token('ELEMENT')
+      parameter
     end
   end
 
@@ -130,6 +111,8 @@ class Parser3
       take_token('COLOR')
     elsif @token[:token] == 'NUMBER'
       take_token('NUMBER')
+    else
+      raise "Expecting value, got #{@token}"
     end
   end
 
@@ -152,13 +135,11 @@ class Parser3
     elsif @token[:token] == 'NUMBER'
       take_token('NUMBER')
       rest_values
-    else
-      #do nothuing
     end
   end
 
-  def value?(token)
-    (token[:token] == "ELEMENT") || (token[:token] == "TEXT") || (token[:token] == "COLOR") || (token[:token] == "URL") || (token[:token] == "UNIT")
+  def selector?(token)
+    (token[:token] == 'ELEMENT') || (token[:token] == 'CLASS') || (token[:token] == 'ID')
   end
 end
 
