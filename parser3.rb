@@ -69,7 +69,7 @@ class Parser3
 
   def parameters
     parameter
-    parameters
+    another_parameters
   end
 
   def parameter
@@ -101,6 +101,14 @@ class Parser3
       end
     else
       raise "Expecting TEXT or ELEMENT, got #{@token}"
+    end
+  end
+
+  def another_parameters
+    if @token[:token] == 'TEXT' || @token[:token] == 'ELEMENT'
+      parameter
+    else
+      #do nothing
     end
   end
 

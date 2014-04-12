@@ -9,7 +9,7 @@ def start_test(css_string)
 end
 
 
-css_test = "body{ margin-left:200px; background:#5d9ab2 url(\"img_tree.png\") no-repeat top left;}
+css_test = "body{ margin-left:200px; background:#5d9ab2 url(\"img_tree.png\") no-repeat top left}
 .container{text-align:center;}
 #box{
    border:1px solid gray; 
@@ -21,7 +21,7 @@ a {display:block;background-color:#98bf21;width:120px ;text-align:center;padding
 "
 input_string = ".bartek, monika, #piotrkow{bartek:warszawa;}"
 # puts Scanner.new(css_test).inspect
-scanner = Scanner.new(input_string)
+scanner = Scanner.new(css_test)
 
 parser = Parser3.new(scanner)
 parser.start

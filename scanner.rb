@@ -42,7 +42,7 @@ class Scanner
     ["CLASS" ,     /\.[a-zA-Z_]+[0-9]?/],
     ["COLOR",      /#[0-9a-fA-F]{6,6}/],
     ["ID" ,        /\#[a-zA-Z_]+[0-9]?/],
-    ["TEXT",       /[a-zA-Z_]+[\-]+[a-zA-Z_]*/],
+    ["ELEMENT",    /[a-zA-Z_]+[\-]+[a-zA-Z_]*/],
     ["UNIT",       /\d+[em|in|px|%]+/],
     ["ELEMENT" ,   /[a-zA-Z_]+[0-9]?/],
     ["NUMBER",     /-?\d+[.\.]?\d*/],
