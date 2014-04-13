@@ -8,6 +8,11 @@ class Parser3
     if @token[:token] != token_type
       raise "Missing token: %s" % token_type
     end
+
+    if token_type == 'CCB' && !@scanner.more_tokens?
+      return
+    end
+
     @token = @scanner.next_token
   end
 
@@ -18,7 +23,7 @@ class Parser3
   def start
     stylesheet
   end
-# stylesheet => styled_selector  
+ 
   def stylesheet
     styled_selector
     stylesheets
@@ -62,7 +67,6 @@ class Parser3
   def parameters_block
     take_token('OCB')
     parameters
-    puts @token
     take_token('CCB')
   end
 
@@ -76,6 +80,8 @@ class Parser3
       take_token('TEXT')
     elsif @token[:token] == 'ELEMENT'
       take_token('ELEMENT')
+    else 
+      return
     end
 
     take_token('COLON')
@@ -84,12 +90,12 @@ class Parser3
   end
 
   def another_parameters
-    if @token[:token] == 'TEXT'
-      take_token('TEXT')
-      parameter
+    if @token[:token] == 'TEXT' 
+      parameters
     elsif @token[:token] == 'ELEMENT'
-      take_token('ELEMENT')
-      parameter
+      parameters
+    else 
+      return
     end
   end
 
@@ -140,6 +146,10 @@ class Parser3
 
   def selector?(token)
     (token[:token] == 'ELEMENT') || (token[:token] == 'CLASS') || (token[:token] == 'ID')
+  end
+
+  def ccb?(token)
+    token[:token] == 'CCB'
   end
 end
 

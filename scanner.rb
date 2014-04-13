@@ -71,7 +71,11 @@ class Scanner
     if @current_token_number - 1 < @tokens.length
       return @tokens[@current_token_number - 1]
     else
-      raise 'Error: No more tokens'
+      raise "Missing tokens after #{@tokens[@current_token_number - 2]}"
     end
+  end
+
+  def more_tokens?
+    @current_token_number < @tokens.length
   end
 end
