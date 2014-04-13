@@ -72,7 +72,7 @@ class Parser3
 
   def parameters
     parameter
-    another_parameters
+    more_parameters
   end
 
   def parameter
@@ -89,13 +89,9 @@ class Parser3
     take_token('SCOLON')
   end
 
-  def another_parameters
-    if @token[:token] == 'TEXT' 
+  def more_parameters
+    if @token[:token] == 'TEXT' || @token[:token] == 'ELEMENT'
       parameters
-    elsif @token[:token] == 'ELEMENT'
-      parameters
-    else 
-      return
     end
   end
 
@@ -123,29 +119,17 @@ class Parser3
   end
 
   def rest_values
-    if @token[:token] == 'TEXT'
-      take_token('TEXT')
-      rest_values
-    elsif @token[:token] == 'ELEMENT'
-      take_token('ELEMENT')
-      rest_values
-    elsif @token[:token] == 'URL'
-      take_token('URL')
-      rest_values
-    elsif @token[:token] == 'UNIT'
-      take_token('UNIT')
-      rest_values
-    elsif @token[:token] == 'COLOR'
-      take_token('COLOR')
-      rest_values
-    elsif @token[:token] == 'NUMBER'
-      take_token('NUMBER')
-      rest_values
+    if value?(@token)
+      values
     end
   end
 
   def selector?(token)
     (token[:token] == 'ELEMENT') || (token[:token] == 'CLASS') || (token[:token] == 'ID')
+  end
+
+  def value?(token)
+    (token[:token] == "ELEMENT") || (token[:token] == "TEXT") || (token[:token] == "COLOR") || (token[:token] == "URL") || (token[:token] == "UNIT")
   end
 
   def ccb?(token)
