@@ -1,3 +1,6 @@
+require './helper'
+include Helper
+
 class Parser3
   def initialize(scanner)
     @scanner = scanner
@@ -46,11 +49,11 @@ class Parser3
   end
 
   def selector
-    if (@token[:token] == 'ELEMENT')
+    if element?(@token)
       take_token('ELEMENT')
-    elsif (@token[:token] == 'CLASS')
+    elsif class?(@token)
       take_token('CLASS')
-    elsif (@token[:token] == 'ID')
+    elsif id?(@token)
       take_token('ID')
     else
       raise "Expecting selector, got #{@token}"
@@ -58,7 +61,7 @@ class Parser3
   end
 
   def continuation_of_selectors
-    if (@token[:token] == 'COMMA')
+    if comma?(@token)
       take_token('COMMA')
       selectors
     end
@@ -76,9 +79,9 @@ class Parser3
   end
 
   def parameter
-    if @token[:token] == 'TEXT' 
+    if text?(@token) 
       take_token('TEXT')
-    elsif @token[:token] == 'ELEMENT'
+    elsif element?(@token)
       take_token('ELEMENT')
     else 
       return
@@ -90,7 +93,7 @@ class Parser3
   end
 
   def more_parameters
-    if @token[:token] == 'TEXT' || @token[:token] == 'ELEMENT'
+    if text?(@token) || element?(@token)
       parameters
     end
   end
@@ -101,17 +104,17 @@ class Parser3
   end
 
   def value
-    if @token[:token] == 'TEXT'
+    if text?(@token)
       take_token('TEXT')
-    elsif @token[:token] == 'ELEMENT'
+    elsif element?(@token)
       take_token('ELEMENT')
-    elsif @token[:token] == 'URL'
+    elsif url?(@token)
       take_token('URL')
-    elsif @token[:token] == 'UNIT'
+    elsif unit?(@token)
       take_token('UNIT')
-    elsif @token[:token] == 'COLOR'
+    elsif color?(@token)
       take_token('COLOR')
-    elsif @token[:token] == 'NUMBER'
+    elsif number?(@token)
       take_token('NUMBER')
     else
       raise "Expecting value, got #{@token}"
@@ -122,18 +125,6 @@ class Parser3
     if value?(@token)
       values
     end
-  end
-
-  def selector?(token)
-    (token[:token] == 'ELEMENT') || (token[:token] == 'CLASS') || (token[:token] == 'ID')
-  end
-
-  def value?(token)
-    (token[:token] == "ELEMENT") || (token[:token] == "TEXT") || (token[:token] == "COLOR") || (token[:token] == "URL") || (token[:token] == "UNIT")
-  end
-
-  def ccb?(token)
-    token[:token] == 'CCB'
   end
 end
 
