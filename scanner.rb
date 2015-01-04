@@ -50,6 +50,7 @@ class Scanner
     ["UNKNOWN",    /./]]
 
     token_group_str   = create_token_group_string(token_specification)
+    
     %r{#{token_group_str}}
   end
 
